@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.fofx.co/comp/comp.js"></script>
+    <script type="text/javascript" src="https://restonlimousine.github.io/staff/xlsx.js"></script>
+  </head>
+  <body>
+    <script type="text/plain" data-comp-src="https://raw.githubusercontent.com/fofx-software/comp/master/comp/comp/core.cmp.clj">
+    /*
+                var repo = action.repo,
+                page = action.page,
+                url = "https://api.github.com/repos/RestonLimousine/" + repo + "/contents/" + page;
+      
+            fetch(url, {
+              headers: {
+                "Authorization": "token " + token,
+                "User-Agent": "RestonLimousine",
+                "Accept": "application/vnd.github.v3.raw"
+              }
+            }).then(response => response.text().then(function (text) {
+              var data = JSON.parse(text);
+              if (!data.listing) {
+                data.listing = [];
+                data.listingData.forEach(function (item) {
+                  item = applyTemplate(data.listingTemplate, item);
+                  data.listing.push(item);
+                });
+              }
+              data.listing.sort(function (x, y) {
+                var h1 = insens(x.header),
+                    h2 = insens(y.header);
+                return h1 > h2 ? 1 : h1 < h2 ? -1 : 0;
+              });
+              loadPage(data);
+            }));
+            */
+    </script>
+  </body>
+</html>
