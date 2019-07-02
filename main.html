@@ -11,7 +11,7 @@
       {:ns main
        :require [[element.core :as el :src "https://raw.githubusercontent.com/fofx-software/element/master/core.cmp.clj"]]}
       
-      (def reader (new FileReader))
+      (def reader (new js/FileReader))
 
       (.addEventListener reader "loadend"
         (fn []
