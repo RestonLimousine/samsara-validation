@@ -11,23 +11,24 @@
       {:ns main
        :require [[element.core :as el :src "https://raw.githubusercontent.com/fofx-software/element/master/core.cmp.clj"]]}
       
-      (def reader (new js/FileReader))
-
-      (.addEventListener reader "loadend"
-        (fn []
-          (let [result (new js/Uint8Array (.-result reader))
-                book (.read js/XLSX result (object "type" "array"))
-                first-sheet (-> book .-SheetNames (aget 0))
-                sheet (-> book .-Sheets (aget first-sheet))]
-            (-> js/XLSX .-utils (.sheet_to_json sheet)))))
+      (defn make-reader
+        [which]
+        (doto (new js/FileReader)
+          (.addEventListener "loadend"
+            (fn []
+              (let [result (new js/Uint8Array (.-result reader))
+                    book (.read js/XLSX result (object "type" "array"))
+                    first-sheet (-> book .-SheetNames (aget 0))
+                    sheet (-> book .-Sheets (aget first-sheet))]
+                (-> js/XLSX .-utils (.sheet_to_json sheet) (->> (.log js/console))))))))
       
       (doseq [id ["#upload-samsara" "#upload-santa-cruz"]]
-        (let [input (el/query id)]
+        (let [reader (make-reader id)
+              input (el/query id)]
           (.addEventListener input "change"
             (fn [e]
               (.readAsArrayBuffer reader (aget (.-files input) 0))))))
       
-      (comp/pr "done")
     </script>
   </body>
 </html>
