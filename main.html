@@ -23,8 +23,10 @@
                     first-sheet (-> book .-SheetNames (aget 0))
                     sheet (-> book .-Sheets (aget first-sheet))
                     opts (object "header"  1)
-                    json (-> js/XLSX .-utils (.sheet_to_json sheet opts))]
-                 (comp/pr (swap! files assoc which json)))))
+                    json (-> js/XLSX .-utils (.sheet_to_json sheet opts))
+                    files (swap! files assoc which json)]
+                (if (= (count files) 2)
+                  (comp/pr "done")))))
           reader))
       
       (doseq [id ["upload-samsara" "upload-santa-cruz"]]
