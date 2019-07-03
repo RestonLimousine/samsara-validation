@@ -13,14 +13,15 @@
       
       (defn make-reader
         [which]
-        (doto (new js/FileReader)
+        (let [reader (new js/FileReader)]
           (.addEventListener "loadend"
             (fn []
               (let [result (new js/Uint8Array (.-result reader))
                     book (.read js/XLSX result (object "type" "array"))
                     first-sheet (-> book .-SheetNames (aget 0))
                     sheet (-> book .-Sheets (aget first-sheet))]
-                (-> js/XLSX .-utils (.sheet_to_json sheet) (->> (.log js/console))))))))
+                (-> js/XLSX .-utils (.sheet_to_json sheet) (->> (.log js/console))))))
+          reader))
       
       (doseq [id ["#upload-samsara" "#upload-santa-cruz"]]
         (let [reader (make-reader id)
