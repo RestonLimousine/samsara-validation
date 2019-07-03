@@ -5,13 +5,17 @@
     <script type="text/javascript" src="https://restonlimousine.github.io/staff/xlsx.js"></script>
   </head>
   <body>
-    <div><input type="file" id="upload-santa-cruz"></div>
-    <div><input type="file" id="upload-samsara"></div>
+    <div><label>Upload Santa Cruz Export</label><input type="file" id="upload-santa-cruz"></div>
+    <div><label>Upload Samsara Export</label><input type="file" id="upload-samsara"></div>
     <script type="text/plain" data-comp-src="https://raw.githubusercontent.com/fofx-software/comp/master/comp/comp/core.cmp.clj">
       {:ns main
        :require [[element.core :as el :src "https://raw.githubusercontent.com/fofx-software/element/master/core.cmp.clj"]]}
       
       (def files (atom {}))
+      
+      (defn compare-files
+        [{sms "upload-samsara" scr "upload-santa-cruz"}]
+        (.log js/console scr))
       
       (defn make-reader
         [which]
@@ -25,8 +29,7 @@
                     opts (object "header"  1)
                     json (-> js/XLSX .-utils (.sheet_to_json sheet opts))
                     files (swap! files assoc which json)]
-                (if (= (count files) 2)
-                  (comp/pr "done")))))
+                (if (= (count files) 2) (compare-files files)))))
           reader))
       
       (doseq [id ["upload-samsara" "upload-santa-cruz"]]
