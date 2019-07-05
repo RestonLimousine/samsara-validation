@@ -23,8 +23,11 @@
       
       (defn compare-files
         [{sms "upload-samsara" scr "upload-santa-cruz"}]
-        (let [[driver-name pickup-time] (get-scr-headers scr)]
-          (comp/pr [driver-name pickup-time])))
+        (let [[driver-name pickup-time] (get-scr-headers scr)
+              get-col (fn [col] (fn [row] (nth row col)))
+              get-cols (juxt (get-col driver-name) (get-col pickup-time))
+              scr (sort-by get-cols (rest scr))]
+          (.log js/console scr)))
       
       (defn make-reader
         [which]
