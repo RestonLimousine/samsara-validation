@@ -24,7 +24,7 @@
       
       (defn compare-files
         [{sms "upload-samsara" scr "upload-santa-cruz"}]
-        (let [[driver-name pickup-time] (get-scr-headers scr)]
+        (let [[driver-name pickup-time] (get-scr-headers (vec scr))]
           (comp/pr [driver-name pickup-time])))
       
       (defn make-reader
