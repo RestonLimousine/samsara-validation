@@ -18,8 +18,8 @@
       (defn get-scr-headers
         [[headers]]
         (vector
-          (index-of headers "DispatchDriverName")
-          (index-of headers "PickupDateTime")))
+          (get-key headers "DispatchDriverName")
+          (get-key headers "PickupDateTime")))
       
       (defn compare-files
         [{sms "upload-samsara" scr "upload-santa-cruz"}]
