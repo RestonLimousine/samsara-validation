@@ -16,7 +16,7 @@
       (def files (atom {}))
       
       (defn get-scr-headers
-        [headers]
+        [[headers]]
         (let [headers (vec headers)]
           (vector
             (get-key headers "DispatchDriverName")
