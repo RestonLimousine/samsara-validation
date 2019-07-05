@@ -27,7 +27,7 @@
               get-col (fn [col] (fn [row] (nth row col)))
               get-cols (juxt (get-col driver-name) (get-col pickup-time))
               scr (sort-by get-cols (rest scr))]
-          (.log js/console scr)))
+          (.log js/console (arr scr))))
       
       (defn make-reader
         [which]
