@@ -14,19 +14,19 @@
        :require [[element.core :as el :src "https://raw.githubusercontent.com/fofx-software/element/master/core.cmp.clj"]]}
       
       (def files (atom {}))
-      
+      (comp/pr 1)
       (defn get-scr-headers
         [[headers]]
         (let [headers (vec headers)]
           (vector
             (get-key headers "DispatchDriverName")
             (get-key headers "PickupDateTime"))))
-      
+      (comp/pr 2)
       (defn compare-files
         [{sms "upload-samsara" scr "upload-santa-cruz"}]
         (let [[driver-name pickup-time] (get-scr-headers (vec scr))]
           (comp/pr [driver-name pickup-time])))
-      
+      (comp/pr 3)
       (defn make-reader
         [which]
         (let [reader (new js/FileReader)]
