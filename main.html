@@ -20,14 +20,18 @@
         (vector
           (get-key headers "DispatchDriverName")
           (get-key headers "PickupDateTime")))
+       
+      (defn sort-scr
+        [scr]
+        (let [[driver-name pickup-time] (get-scr-headers scr)
+              get-col (fn [col] (fn [row] (nth row col)))
+              get-cols (juxt (get-col driver-name) (get-col pickup-time))]
+          (sort-by get-cols (rest scr))))
       
       (defn compare-files
         [{sms "upload-samsara" scr "upload-santa-cruz"}]
-        (let [[driver-name pickup-time] (get-scr-headers scr)
-              get-col (fn [col] (fn [row] (nth row col)))
-              get-cols (juxt (get-col driver-name) (get-col pickup-time))
-              scr (sort-by get-cols (rest scr))]
-          (.log js/console (arr scr))))
+        (let [scr (sort-scr scr)]
+          ))
       
       (defn make-reader
         [which]
