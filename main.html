@@ -17,20 +17,40 @@
       
       (defn get-scr-headers
         [[headers]]
-        (vector
-          (get-key headers "DispatchDriverName")
-          (get-key headers "PickupDateTime")))
-       
+        {:driver-code (get-key headers "DriverCode")
+         :pickup-time (get-key headers "PickupDateTime")
+         :shuttle-start (get-key headers "SegmentStartDateTime")
+         :charter-start (get-key headers "EnRouteToPickupDateTime")
+         :shuttle-end (get-key headers "SegmentEndDateTime")})
+      
       (defn sort-scr
-        [scr]
-        (let [[driver-name pickup-time] (get-scr-headers scr)
-              get-col (fn [col] (fn [row] (nth row col)))
-              get-cols (juxt (get-col driver-name) (get-col pickup-time))]
-          (sort-by get-cols (rest scr))))
+        [scr {:keys [driver-code pickup-time]}]
+        (sort-by
+          (fn [row] [(nth row driver-code) (nth row pickup time)])
+          (rest scr)))
+      
+      (defn sort-sms
+        [sms]
+        (sort-by
+          (fn [{:strs [notes logStartMs]}]
+            (vector
+              (-> (.split notes #"\n") first .trim)
+              logStartMs))
+          sms))
       
       (defn compare-files
         [{sms "upload-samsara" scr "upload-santa-cruz"}]
-        (let [scr (sort-scr scr)]
+        (let [scr-headers (get-scr-headers scr)
+              {:keys [shuttle-start charter-start]} scr-headers
+              scr (sort-scr scr scr-headers)
+              sms (sort-sms sms)]
+          (reduce
+            (fn [bad job]
+              (let [start (nth job shuttle-start (nth job charter-start))
+                    end (nth job shuttle-end)]
+                ))
+            []
+            scr)
           ))
       
       (defn make-reader
