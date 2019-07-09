@@ -41,8 +41,7 @@
       scr)
     ))
 
-(defn make-reader
-  [which]
+(def file-reader
   (let [reader (new js/FileReader)]
     (.addEventListener reader "loadend"
       (fn [e]
@@ -52,13 +51,17 @@
               sheet (-> book .-Sheets (aget first-sheet))
               opts (object "header"  1)
               json (-> js/XLSX .-utils (.sheet_to_json sheet opts))
-              files (swap! files assoc which json)]
-          (if (= (count files) 2) (compare-files files)))))
+              ; files (swap! files assoc which json)
+              ]
+          )))
     reader))
 
-(doseq [id ["upload-samsara" "upload-santa-cruz"]]
-  (let [reader (make-reader id)
-        input (el/query {:id id})]
-    (.addEventListener input "change"
-      (fn [e]
-        (.readAsArrayBuffer reader (aget (.-files input) 0))))))
+(el/append-child el/body
+  (vector "div" {}
+    ["h4" {} "Upload Santa Cruz Export"]
+    (vector "input"
+      {"type" "file"
+       :on {"change"
+            (fn [e]
+              (.readAsArrayBuffer file-reader
+                (aget (.-files input) 0)))}})))
