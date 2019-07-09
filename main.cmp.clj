@@ -64,4 +64,4 @@
        :on {"change"
             (fn [e]
               (.readAsArrayBuffer file-reader
-                (aget (.-files input) 0)))}})))
+                (aget (.-files js/this) 0)))}})))
