@@ -41,6 +41,35 @@
       scr)
     ))
 
+(defn send-req
+  [uri {:keys [method params]}]
+  (let [method (or method "GET")
+        params (or params {})
+        uri (str "https://api.samsara.com/v1" uri "?access_token=" js/accessToken)
+        promise (promise)]
+    (.then (js/fetch uri)
+      (fn [data]
+        (put! promise data)))
+    promise))
+
+(defn get-sms-data
+  [scr]
+  (let [[start end]
+          (map
+            (fn [w]
+              (.getTime (aget (w scr) "PickupDateTime")))
+            [first last])]
+    (after (send-req "/fleet/drivers" {})
+      (fn [drivers]
+        (.log js/console drivers)))))
+
+(defn compare-to-sms
+  [scr]
+  (let [scr (sort-by (fn [row] (aget row "PickupDateTime")) scr)]
+    (after (get-sms-data scr)
+      (fn [sms]
+        ))))
+
 (def file-reader
   (let [reader (new js/FileReader)]
     (.addEventListener reader "loadend"
@@ -49,11 +78,8 @@
               book (.read js/XLSX result (object "type" "array"))
               first-sheet (-> book .-SheetNames (aget 0))
               sheet (-> book .-Sheets (aget first-sheet))
-              opts (object "header"  1)
-              json (-> js/XLSX .-utils (.sheet_to_json sheet opts))
-              ; files (swap! files assoc which json)
-              ]
-          )))
+              rows (-> js/XLSX .-utils (.sheet_to_json sheet))]
+          (compare-to-sms rows))))
     reader))
 
 (el/append-child el/body
