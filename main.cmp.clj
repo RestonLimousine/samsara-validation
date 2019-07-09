@@ -29,7 +29,7 @@
 (defn compare-files
   [{sms "upload-samsara" scr "upload-santa-cruz"}]
   (let [scr-headers (get-scr-headers scr)
-        {:keys [shuttle-start charter-start]} scr-headers
+        {:keys [shuttle-start charter-start shuttle-end]} scr-headers
         scr (sort-scr scr scr-headers)
         sms (sort-sms sms)]
     (reduce
