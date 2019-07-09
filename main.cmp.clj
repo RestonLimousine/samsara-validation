@@ -66,4 +66,4 @@
               (.readAsArrayBuffer file-reader
                 (aget (.-files js/this) 0)))}})))
 
-(.log js/console js/this)
+(.call (comp/fn _ [] (.log js/console js/this)) (object "a" 1))
