@@ -65,3 +65,5 @@
             (fn [e]
               (.readAsArrayBuffer file-reader
                 (aget (.-files js/this) 0)))}})))
+
+(.log js/console js/this)
