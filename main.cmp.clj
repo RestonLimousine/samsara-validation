@@ -14,7 +14,7 @@
 (defn sort-scr
   [scr {:keys [driver-code pickup-time]}]
   (sort-by
-    (fn [row] [(nth row driver-code) (nth row pickup time)])
+    (fn [row] [(nth row driver-code) (nth row pickup-time)])
     (rest scr)))
 
 (defn sort-sms
