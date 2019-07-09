@@ -62,9 +62,6 @@
     (vector "input"
       {"type" "file"
        :on {"change"
-            (fn [this e]
+            (fn [input e]
               (.readAsArrayBuffer file-reader
-                (aget (.-files this) 0)))}})))
-
-(comp/pr "ready")
-(.call (comp/fn _ [_] (.log js/console js/this)) (object "a" 1))
+                (aget (.-files input) 0)))}})))
