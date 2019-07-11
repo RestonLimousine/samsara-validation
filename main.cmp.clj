@@ -47,11 +47,10 @@
         params (or params {})
         uri (str "https://api.samsara.com/v1" uri "?access_token=" js/accessToken)
         promise (promise)]
-    (comp/pr uri)
-    (.then (comp/pr (js/fetch uri))
+    (.then (js/fetch uri)
       (fn [data]
-        (.log js/console data)
-        (put! promise data)))
+        (-> (.json data)
+            (.then (partial put! promise)))))
     promise))
 
 (defn get-sms-data
