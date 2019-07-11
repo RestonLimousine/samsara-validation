@@ -59,7 +59,7 @@
   (let [[start end]
           (map
             (fn [w]
-              (.getTime (aget (w scr) "PickupDateTime")))
+              (.getTime (new js/Date (aget (w scr) "PickupDateTime"))))
             [first last])]
     (after (send-req "/fleet/drivers" {})
       (fn [drivers]
@@ -68,8 +68,7 @@
 (defn compare-to-sms
   [scr]
   (let [scr (sort-by (fn [row] (aget row "PickupDateTime")) scr)]
-   (.log js/console scr)
-    (after (comp/pr (get-sms-data scr))
+    (after (get-sms-data scr)
       (fn [sms]
         ))))
 
