@@ -77,10 +77,15 @@
     (.addEventListener reader "loadend"
       (fn [e]
         (let [result (new js/Uint8Array (.-result reader))
+              __ (comp/pr 1)
               book (.read js/XLSX result (object "type" "array"))
+              ___ (comp/pr 2)
               first-sheet (-> book .-SheetNames (aget 0))
+              ____ (comp/pr 3)
               sheet (-> book .-Sheets (aget first-sheet))
+              _____ (comp/pr 4)
               rows (-> js/XLSX .-utils (.sheet_to_json sheet))]
+(.log js/console rows)
           (compare-to-sms rows))))
     reader))
 
