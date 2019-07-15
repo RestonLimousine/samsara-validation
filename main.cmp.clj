@@ -41,11 +41,20 @@
       scr)
     ))
 
+(defn make-req-params
+  [params]
+  (str "?"
+    (.join
+      (arr
+        (map (fn [[k v]] (str k "=" v))
+          (assoc params "access_token" js/accessToken)))
+      "&")))
+
 (defn send-req
   [uri {:keys [method params]}]
   (let [method (or method "GET")
-        params (or params {})
-        uri (str "https://api.samsara.com/v1" uri "?access_token=" js/accessToken)
+        req-params (make-req-params params)
+        uri (str "https://api.samsara.com/v1" uri req-params)
         promise (promise)]
     (.then (js/fetch uri)
       (fn [data]
@@ -53,18 +62,39 @@
             (.then (partial put! promise)))))
     promise))
 
-(defn get-drivers
+(defn get-start-end
   [scr]
-  (let [[start end]
-          (map
-            (fn [w]
-              (.getTime (new js/Date (aget (w scr) "PickupDateTime"))))
-            [first last])]
-    (->promise (send-req "/fleet/drivers" {}))))
+  (map
+    (fn [f]
+      (.getTime (new js/Date (aget (f scr) "PickupDateTime"))))
+    [first last]))
+
+(defn get-driver-logs
+  [driver start end]
+  (send-req "/fleet/hos_logs"
+    {:params {"driverId" (.-id d)
+              "startMs" start
+              "endMs" end}}))
+
+(defn get-hos-logs
+  [drivers scr]
+  (let [p (promise)
+        [start end] (get-start-end scr)
+        state (atom {:n (count drivers) :logs (array)})]
+    (doseq [d drivers]
+      (after (get-driver-logs d start end)
+        (fn [new-logs]
+          (let [{:keys [n logs]} (swap! state
+                                   (fn [{:keys [logs n]}]
+                                     {:logs (concat logs (.-logs new-logs))
+                                      :n (dec n)}))]
+            (if (= n 0) (put! p logs))))))
+    p))
 
 (defn get-sms-data
   [scr]
-  (after-> (get-drivers scr)
+  (after-> (send-req "/fleet/drivers" {})
+           (get-hos-logs scr)
            (->> (.log js/console))))
 
 (defn compare-to-sms
