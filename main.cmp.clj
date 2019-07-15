@@ -53,16 +53,19 @@
             (.then (partial put! promise)))))
     promise))
 
-(defn get-sms-data
+(defn get-drivers
   [scr]
   (let [[start end]
           (map
             (fn [w]
               (.getTime (new js/Date (aget (w scr) "PickupDateTime"))))
             [first last])]
-    (after (send-req "/fleet/drivers" {})
-      (fn [drivers]
-        (.log js/console drivers)))))
+    (->promise (send-req "/fleet/drivers"))))
+
+(defn get-sms-data
+  [scr]
+  (after-> (get-drivers scr)
+           (->> (.log js/console))))
 
 (defn compare-to-sms
   [scr]
