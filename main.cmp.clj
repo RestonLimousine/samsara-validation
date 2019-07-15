@@ -60,7 +60,7 @@
             (fn [w]
               (.getTime (new js/Date (aget (w scr) "PickupDateTime"))))
             [first last])]
-    (->promise (send-req "/fleet/drivers"))))
+    (->promise (send-req "/fleet/drivers" {}))))
 
 (defn get-sms-data
   [scr]
