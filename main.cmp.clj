@@ -94,6 +94,7 @@
 (defn get-sms-data
   [scr]
   (after-> (send-req "/fleet/drivers" {})
+           .-drivers
            (get-hos-logs scr)
            (->> (.log js/console))))
 
