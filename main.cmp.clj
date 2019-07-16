@@ -72,7 +72,7 @@
 (defn get-driver-logs
   [driver start end]
   (send-req "/fleet/hos_logs"
-    {:params {"driverId" (.-id d)
+    {:params {"driverId" (.-id driver)
               "startMs" start
               "endMs" end}}))
 
