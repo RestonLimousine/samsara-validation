@@ -88,6 +88,7 @@
                                    (fn [{:keys [logs n]}]
                                      {:logs (concat logs (.-logs new-logs))
                                       :n (dec n)}))]
+           (comp/pr n)
             (if (= n 0) (put! p logs))))))
     p))
 
