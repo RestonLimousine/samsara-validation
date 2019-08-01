@@ -59,9 +59,7 @@
     (.then (js/fetch uri)
       (fn [data]
         (-> (.json data)
-            (.then (fn* [d] (.log js/console d)))
-            #_
-            (.then (partial put! promise)))))
+            (.then (fn* [d] (put! promise d))))))
     promise))
 
 (defn get-start-end
