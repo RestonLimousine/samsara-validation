@@ -78,6 +78,7 @@
 
 (defn get-hos-logs
   [drivers scr]
+  (.-log js/console drivers)
   (let [p (promise)
         [start end] (get-start-end scr)
         state (atom {:n (count drivers) :logs (array)})]
@@ -88,7 +89,6 @@
                                    (fn [{:keys [logs n]}]
                                      {:logs (concat logs (.-logs new-logs))
                                       :n (dec n)}))]
-           (comp/pr n)
             (if (= n 0) (put! p logs))))))
     p))
 
