@@ -57,7 +57,7 @@
         uri (str "https://api.samsara.com/v1" uri req-params)
         promise (promise)]
     (.then (js/fetch uri)
-      (fn [data]
+      (fn* [data]
         (-> (.json data)
             (.then (fn* [d] (put! promise d))))))
     promise))
@@ -95,6 +95,7 @@
   [scr]
   (after-> (send-req "/fleet/drivers" {})
            .-drivers
+           (->> (.log js/console))
            (get-hos-logs scr)
            (->> (.log js/console))))
 
