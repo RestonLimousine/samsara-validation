@@ -59,6 +59,8 @@
     (.then (js/fetch uri)
       (fn [data]
         (-> (.json data)
+            (.then (fn* [d] (.log js/console d)))
+            #_
             (.then (partial put! promise)))))
     promise))
 
@@ -78,7 +80,6 @@
 
 (defn get-hos-logs
   [drivers scr]
-  (.-log js/console drivers)
   (let [p (promise)
         [start end] (get-start-end scr)
         state (atom {:n (count drivers) :logs (array)})]
